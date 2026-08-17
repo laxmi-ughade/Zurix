@@ -1,0 +1,801 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Laxmi",
+      "email": "laxmi@gmail.com",
+      "password": "123456"
+    }
+  ],
+  "messages": [],
+  "categories": [
+    {
+      "id": "1",
+      "gender": "women",
+      "name": "Dresses",
+      "count": 12,
+      "image": "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "2",
+      "gender": "women",
+      "name": "Blouses",
+      "count": 12,
+      "image": "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "3",
+      "gender": "women",
+      "name": "Outerwear",
+      "count": 12,
+      "image": "https://images.unsplash.com/photo-1543076447-215ad9ba6923?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "4",
+      "gender": "women",
+      "name": "Knitwear",
+      "count": 12,
+      "image": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "5",
+      "gender": "women",
+      "name": "Bags",
+      "count": 12,
+      "image": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "6",
+      "gender": "women",
+      "name": "Trousers",
+      "count": 12,
+      "image": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "7",
+      "gender": "women",
+      "name": "Skirts",
+      "count": 12,
+      "image": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      "id": "8",
+      "gender": "women",
+      "name": "Shoes",
+      "count": 12,
+      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "9",
+      "gender": "men",
+      "name": "Shirts",
+      "count": 18,
+      "image": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "10",
+      "gender": "men",
+      "name": "T-Shirts",
+      "count": 24,
+      "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "11",
+      "gender": "men",
+      "name": "Jackets",
+      "count": 16,
+      "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "12",
+      "gender": "men",
+      "name": "Knitwear",
+      "count": 14,
+      "image": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "13",
+      "gender": "men",
+      "name": "Trousers",
+      "count": 20,
+      "image": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "14",
+      "gender": "men",
+      "name": "Jeans",
+      "count": 22,
+      "image": "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "15",
+      "gender": "men",
+      "name": "Shoes",
+      "count": 15,
+      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": "16",
+      "gender": "men",
+      "name": "Accessories",
+      "count": 12,
+      "image": "https://images.unsplash.com/photo-1523779917675-b6ed3a42a561?q=80&w=500&auto=format&fit=crop"
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Floral Halter Top",
+      "price": 29.99,
+      "oldPrice": 39.99,
+      "image": "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": true,
+      "gender": "women",
+      "category": "Dresses",
+      "color": "red",
+      "size": "M",
+      "tags": [
+        "product",
+        "woocommerce"
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Olive Green Tank Top",
+      "price": 39.99,
+      "oldPrice": 49.99,
+      "image": "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": false,
+      "gender": "women",
+      "category": "Blouses",
+      "color": "green",
+      "size": "S",
+      "tags": [
+        "product",
+        "home_1"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Red Tie Front Top",
+      "price": 34.99,
+      "oldPrice": 44.99,
+      "image": "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": false,
+      "gender": "women",
+      "category": "Blouses",
+      "color": "red",
+      "size": "L",
+      "tags": [
+        "product",
+        "home-accordio-1"
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Cream Knit Top",
+      "price": 44.99,
+      "oldPrice": 54.99,
+      "image": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=500&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": false,
+      "gender": "women",
+      "category": "Knitwear",
+      "color": "cream",
+      "size": "M",
+      "tags": [
+        "product"
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Black Satin Blouse",
+      "price": 45.99,
+      "oldPrice": 59.99,
+      "image": "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": true,
+      "gender": "women",
+      "category": "Blouses",
+      "color": "black",
+      "size": "S",
+      "tags": [
+        "product",
+        "woocommerce"
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Beige Oversized Blazer",
+      "price": 69.99,
+      "oldPrice": 89.99,
+      "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": false,
+      "gender": "women",
+      "category": "Outerwear",
+      "color": "beige",
+      "size": "XL",
+      "tags": [
+        "product"
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Classic Denim Jacket",
+      "price": 59.99,
+      "oldPrice": 74.99,
+      "image": "https://images.unsplash.com/photo-1543076447-215ad9ba6923?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": false,
+      "gender": "women",
+      "category": "Outerwear",
+      "color": "blue",
+      "size": "L",
+      "tags": [
+        "product",
+        "home_1"
+      ]
+    },
+    {
+      "id": "8",
+      "name": "Elegant Black Dress",
+      "price": 79.99,
+      "oldPrice": 99.99,
+      "image": "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": true,
+      "gender": "women",
+      "category": "Dresses",
+      "color": "black",
+      "size": "M",
+      "tags": [
+        "product",
+        "woocommerce"
+      ]
+    },
+    {
+      "id": "9",
+      "name": "Classic White Shirt",
+      "price": 39.99,
+      "oldPrice": 49.99,
+      "image": "https://images.unsplash.com/photo-1603252110481-7ba873bf42ab?q=80&w=800&auto=format&fit=crop",
+      "type": "new-arrivals",
+      "sale": false,
+      "gender": "men",
+      "category": "Shirts",
+      "color": "white",
+      "size": "L",
+      "tags": [
+        "product"
+      ]
+    },
+    {
+      "id": "10",
+      "name": "Beige Casual Dress",
+      "price": 49.99,
+      "oldPrice": 59.99,
+      "image": "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=800&auto=format&fit=crop",
+      "type": "new-arrivals",
+      "sale": true,
+      "gender": "women",
+      "category": "Dresses",
+      "color": "beige",
+      "size": "S",
+      "tags": [
+        "product",
+        "home-accordio-1"
+      ]
+    },
+    {
+      "id": "11",
+      "name": "Summer Linen Dress",
+      "price": 54.99,
+      "oldPrice": 64.99,
+      "image": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800&auto=format&fit=crop",
+      "type": "new-arrivals",
+      "sale": false,
+      "gender": "women",
+      "category": "Dresses",
+      "color": "white",
+      "size": "M",
+      "tags": [
+        "product"
+      ]
+    },
+    {
+      "id": "12",
+      "name": "Relaxed Summer Top",
+      "price": 32.99,
+      "oldPrice": 42.99,
+      "image": "https://images.unsplash.com/photo-1523359346063-d879354c0ea5?q=80&w=800&auto=format&fit=crop",
+      "type": "new-arrivals",
+      "sale": false,
+      "gender": "women",
+      "category": "Blouses",
+      "color": "blue",
+      "size": "S",
+      "tags": [
+        "product"
+      ]
+    },
+    {
+      "id": "13",
+      "name": "White Cotton Blouse",
+      "price": 42.99,
+      "oldPrice": 52.99,
+      "image": "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800&auto=format&fit=crop",
+      "type": "new-arrivals",
+      "sale": false,
+      "gender": "women",
+      "category": "Blouses",
+      "color": "white",
+      "size": "M",
+      "tags": [
+        "product"
+      ]
+    },
+    {
+      "id": "14",
+      "name": "Blue Wide Leg Trousers",
+      "price": 48.99,
+      "oldPrice": 62.99,
+      "image": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=800&auto=format&fit=crop",
+      "type": "new-arrivals",
+      "sale": true,
+      "gender": "women",
+      "category": "Trousers",
+      "color": "blue",
+      "size": "S",
+      "tags": [
+        "product",
+        "home_1"
+      ]
+    },
+    {
+      "id": "15",
+      "name": "Minimal Beige Handbag",
+      "price": 64.99,
+      "oldPrice": 79.99,
+      "image": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=800&auto=format&fit=crop",
+      "type": "new-arrivals",
+      "sale": false,
+      "gender": "women",
+      "category": "Bags",
+      "color": "beige",
+      "size": "M",
+      "tags": [
+        "product"
+      ]
+    },
+    {
+      "id": "16",
+      "name": "White Casual Sneakers",
+      "price": 59.99,
+      "oldPrice": 74.99,
+      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&auto=format&fit=crop",
+      "type": "new-arrivals",
+      "sale": false,
+      "gender": "women",
+      "category": "Shoes",
+      "color": "white",
+      "size": "M",
+      "tags": [
+        "product"
+      ]
+    },
+    {
+      "id": "17",
+      "name": "Men's Classic Blazer",
+      "price": 199.99,
+      "oldPrice": 249.99,
+      "image": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": true,
+      "gender": "men",
+      "category": "Jackets",
+      "color": "black",
+      "size": "L",
+      "tags": [
+        "product",
+        "woocommerce"
+      ]
+    },
+    {
+      "id": "18",
+      "name": "Basic Short Sleeve T-Shirt",
+      "price": 19.99,
+      "oldPrice": 29.99,
+      "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": false,
+      "gender": "men",
+      "category": "T-Shirts",
+      "color": "blue",
+      "size": "M",
+      "tags": [
+        "product"
+      ]
+    },
+    {
+      "id": "19",
+      "name": "Boxy Denim Overshirt",
+      "price": 49.99,
+      "oldPrice": 69.99,
+      "image": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": false,
+      "gender": "men",
+      "category": "Knitwear",
+      "color": "blue",
+      "size": "XL",
+      "tags": [
+        "product",
+        "home_1"
+      ]
+    },
+    {
+      "id": "20",
+      "name": "California Floral Textured T-Shirt",
+      "price": 22.99,
+      "oldPrice": null,
+      "image": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800&auto=format&fit=crop",
+      "type": "new-arrivals",
+      "sale": false,
+      "gender": "men",
+      "category": "T-Shirts",
+      "color": "white",
+      "size": "M",
+      "tags": [
+        "product",
+        "woocommerce"
+      ]
+    },
+    {
+      "id": "21",
+      "name": "Men's Modern Jeans",
+      "price": 69.99,
+      "oldPrice": 89.99,
+      "image": "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=800&auto=format&fit=crop",
+      "type": "new-arrivals",
+      "sale": true,
+      "gender": "men",
+      "category": "Jeans",
+      "color": "blue",
+      "size": "L",
+      "tags": [
+        "product"
+      ]
+    },
+    {
+      "id": "22",
+      "name": "Men's Suede Shoes",
+      "price": 120,
+      "oldPrice": 150,
+      "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": false,
+      "gender": "men",
+      "category": "Shoes",
+      "color": "beige",
+      "size": "M",
+      "tags": [
+        "product",
+        "woocommerce"
+      ]
+    },
+    {
+      "id": "23",
+      "name": "Leather Travel Bag",
+      "price": 180,
+      "oldPrice": null,
+      "image": "https://images.unsplash.com/photo-1547949003-9792a18a2601?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": false,
+      "gender": "men",
+      "category": "Accessories",
+      "color": "black",
+      "size": "XL",
+      "tags": [
+        "product"
+      ]
+    },
+    {
+      "id": "24",
+      "name": "Lightweight Summer Shorts",
+      "price": 29.99,
+      "oldPrice": 39.99,
+      "image": "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?q=80&w=800&auto=format&fit=crop",
+      "type": "new-arrivals",
+      "sale": true,
+      "gender": "men",
+      "category": "Trousers",
+      "color": "cream",
+      "size": "S",
+      "tags": [
+        "product",
+        "home-accordio-1"
+      ]
+    }
+  ],
+  "stylingProducts": [
+    {
+      "id": "1",
+      "name": "Check Shirt",
+      "price": 39.99,
+      "image": "https://images.unsplash.com/photo-1603252110481-7ba873bf42ab"
+    },
+    {
+      "id": "2",
+      "name": "Rustic Linen Shirt",
+      "price": 49.99,
+      "image": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1"
+    },
+    {
+      "id": "3",
+      "name": "Tailored Blazer",
+      "price": 79.99,
+      "image": "https://images.unsplash.com/photo-1591369822096-ffd140ec948f"
+    },
+    {
+      "id": "4",
+      "name": "Denim Jacket",
+      "price": 59.99,
+      "image": "https://images.unsplash.com/photo-1543076447-215ad9ba6923"
+    },
+    {
+      "id": "5",
+      "name": "Oversized Jacket",
+      "price": 69.99,
+      "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5"
+    },
+    {
+      "id": "6",
+      "name": "Classic Coat",
+      "price": 89.99,
+      "image": "https://images.unsplash.com/photo-1544022613-e87ca75a784a"
+    },
+    {
+      "id": "7",
+      "name": "Casual Cardigan",
+      "price": 44.99,
+      "image": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105"
+    },
+    {
+      "id": "8",
+      "name": "Premium Overshirt",
+      "price": 54.99,
+      "image": "https://images.unsplash.com/photo-1598033129183-c4f50c736f10"
+    }
+  ],
+  "scrollCollections": [
+    {
+      "id": "1",
+      "tag": "ON FIRE",
+      "title": "Street Obsession",
+      "image": "https://images.unsplash.com/photo-1539008835657-9e8e9680c956",
+      "button": "Shop Now"
+    },
+    {
+      "id": "2",
+      "tag": "NEW DROP",
+      "title": "Urban Essentials",
+      "image": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
+      "button": "Shop Now"
+    },
+    {
+      "id": "3",
+      "tag": "TRENDING",
+      "title": "Modern Layers",
+      "image": "https://images.unsplash.com/photo-1483985988355-763728e1935b",
+      "button": "Shop Now"
+    },
+    {
+      "id": "4",
+      "tag": "SS26",
+      "title": "Everyday Elegance",
+      "image": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d",
+      "button": "Shop Now"
+    }
+  ],
+  "styleGuides": [
+    {
+      "id": "1",
+      "badge": "DROP 04",
+      "category": "Fashion",
+      "image": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1000&auto=format&fit=crop",
+      "title": "Built for the rain",
+      "description": "Lightweight layers, technical denim, work-grade boots."
+    },
+    {
+      "id": "2",
+      "badge": "MEMBERS",
+      "category": "Inspirations",
+      "image": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1000&auto=format&fit=crop",
+      "title": "Street essentials",
+      "description": "Everyday layers made for city movement."
+    },
+    {
+      "id": "3",
+      "badge": "LIMITED",
+      "category": "Life Style",
+      "image": "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1000&auto=format&fit=crop",
+      "title": "After-hours uniform",
+      "description": "Black-on-black fits for the late shift."
+    },
+    {
+      "id": "4",
+      "badge": "NEW IN",
+      "category": "Trends",
+      "image": "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
+      "title": "Weekend escape",
+      "description": "Relaxed pieces for your next adventure."
+    },
+    {
+      "id": "5",
+      "badge": "TRENDING",
+      "category": "Fashion",
+      "image": "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1000&auto=format&fit=crop",
+      "title": "City layers",
+      "description": "Modern silhouettes for everyday style."
+    },
+    {
+      "id": "6",
+      "badge": "NEW",
+      "category": "Inspirations",
+      "image": "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1000&auto=format&fit=crop",
+      "title": "Summer edit",
+      "description": "Fresh colors and lightweight textures."
+    },
+    {
+      "id": "7",
+      "badge": "LIMITED",
+      "category": "Life Style",
+      "image": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop",
+      "title": "Urban motion",
+      "description": "Comfortable pieces built for movement."
+    },
+    {
+      "id": "8",
+      "badge": "DROP 08",
+      "category": "Trends",
+      "image": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1000&auto=format&fit=crop",
+      "title": "The new uniform",
+      "description": "Essential pieces for the modern wardrobe."
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "1",
+      "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=500&auto=format&fit=crop",
+      "rating": 5,
+      "review": "The fabric feels premium and super comfortable. My new go-to brand.",
+      "name": "sarah.jones",
+      "location": "New York, USA"
+    },
+    {
+      "id": "2",
+      "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=500&auto=format&fit=crop",
+      "rating": 5,
+      "review": "Finally found pieces that look good and fit perfectly. Love the details!",
+      "name": "kristin.a",
+      "location": "Los Angeles, USA"
+    },
+    {
+      "id": "3",
+      "image": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=500&auto=format&fit=crop",
+      "rating": 5,
+      "review": "ZURIX gives me effortless style. I get compliments every time.",
+      "name": "emily.parker",
+      "location": "Berlin, Germany"
+    },
+    {
+      "id": "4",
+      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=500&auto=format&fit=crop",
+      "rating": 5,
+      "review": "Clean designs, great quality, and fast delivery. 10/10 experience.",
+      "name": "alex.martin",
+      "location": "Toronto, Canada"
+    },
+    {
+      "id": "5",
+      "image": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=500&auto=format&fit=crop",
+      "rating": 5,
+      "review": "Minimal, modern and so easy to style with anything in my wardrobe.",
+      "name": "maya.lou",
+      "location": "Sydney, Australia"
+    },
+    {
+      "id": "6",
+      "image": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=500&auto=format&fit=crop",
+      "rating": 5,
+      "review": "Beautiful collection and amazing quality. I absolutely love it.",
+      "name": "olivia.m",
+      "location": "London, UK"
+    },
+    {
+      "id": "7",
+      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=500&auto=format&fit=crop",
+      "rating": 5,
+      "review": "The quality exceeded my expectations. Will definitely shop again.",
+      "name": "james.w",
+      "location": "Chicago, USA"
+    },
+    {
+      "id": "8",
+      "image": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=500&auto=format&fit=crop",
+      "rating": 5,
+      "review": "Perfect fit, beautiful material and very quick delivery.",
+      "name": "anna.k",
+      "location": "Paris, France"
+    }
+  ],
+  "wishlist": [],
+  "cart": [],
+  "orders": [
+    {
+      "id": "R2npvUOpENM",
+      "userId": "Dr6k6PPSWxk",
+      "customer": {
+        "name": "Laxmi Ughade",
+        "email": "laxmiughade2510@gmail.com",
+        "phone": "",
+        "address": "jljb,  b,,  1534, United States"
+      },
+      "items": [
+        {
+          "id": "1",
+          "name": "Floral Halter Top",
+          "price": 29.99,
+          "oldPrice": 39.99,
+          "image": "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=800&auto=format&fit=crop",
+          "type": "best-sellers",
+          "sale": true,
+          "gender": "women",
+          "category": "Dresses",
+          "color": "red",
+          "size": "M",
+          "tags": [
+            "product",
+            "woocommerce"
+          ],
+          "quantity": 1
+        },
+        {
+          "id": "8",
+          "name": "Elegant Black Dress",
+          "price": 79.99,
+          "oldPrice": 99.99,
+          "image": "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=800&auto=format&fit=crop",
+          "type": "best-sellers",
+          "sale": true,
+          "gender": "women",
+          "category": "Dresses",
+          "color": "black",
+          "size": "M",
+          "tags": [
+            "product",
+            "woocommerce"
+          ],
+          "quantity": 1
+        }
+      ],
+      "pricing": {
+        "subtotal": 109.98,
+        "discount": 0,
+        "shippingFee": 0,
+        "tax": 8.8,
+        "total": 118.78
+      },
+      "shippingMethod": "Standard Delivery (3-5 Days)",
+      "paymentMethod": "PAYPAL",
+      "status": "Processing",
+      "createdAt": "2026-08-17T09:26:04.705Z",
+      "estimatedDelivery": "Fri Aug 21 2026"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
