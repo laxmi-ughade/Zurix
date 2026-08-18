@@ -4,7 +4,7 @@ export const styleGuideApi = createApi({
   reducerPath: "styleGuideApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/",
+ baseUrl: import.meta.env.VITE_API_URL,
   }),
 
   tagTypes: ["StyleGuides"],

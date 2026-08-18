@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   FiChevronRight,
   FiCheckCircle,
@@ -11,25 +10,36 @@ import {
   FiDollarSign,
   FiCreditCard,
 } from "react-icons/fi";
-import {
-  selectCartItems,
-  selectCartSubtotal,
-  selectCartCoupon,
-  clearCart,
-} from "../features/cartSlice";
-import { selectUser } from "../features/authSlice";
-import { useCreateOrderMutation } from "../services/shopApi";
+import { useGetCartQuery, useCreateOrderMutation } from "../services/shopApi";
 
 function Checkout() {
-  const cartItems = useSelector(selectCartItems);
-  const subtotal = useSelector(selectCartSubtotal);
-  const coupon = useSelector(selectCartCoupon);
-  const user = useSelector(selectUser);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
+  const { data: cartItems = [] } = useGetCartQuery();
   const [createOrder, { isLoading: isPlacingOrder }] = useCreateOrderMutation();
+
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem("user");
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [coupon, setCoupon] = useState(() => {
+    try {
+      const stored = localStorage.getItem("zurix_coupon");
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const subtotal = Array.isArray(cartItems)
+    ? cartItems.reduce(
+        (total, item) => total + (Number(item.price) || 0) * (Number(item.quantity) || 1),
+        0
+      )
+    : 0;
 
   // Simple form fields
   const [formData, setFormData] = useState({
@@ -46,16 +56,16 @@ function Checkout() {
 
   // Pre-fill user data if logged in
   useEffect(() => {
-    if (user) {
+    if (currentUser) {
       setFormData((prev) => ({
         ...prev,
-        name: user.name || prev.name,
-        email: user.email || prev.email,
-        phone: user.phone || prev.phone,
-        address: user.address || prev.address,
+        name: currentUser.name || prev.name,
+        email: currentUser.email || prev.email,
+        phone: currentUser.phone || prev.phone,
+        address: currentUser.address || prev.address,
       }));
     }
-  }, [user]);
+  }, [currentUser]);
 
   // Pricing calculations
   const discountAmount = coupon ? (subtotal * coupon.discountPercent) / 100 : 0;
@@ -85,10 +95,10 @@ function Checkout() {
 
     const newOrder = {
       id: orderId,
-      userId: user?.id || "guest",
+      userId: currentUser?.id || "guest",
       customer: {
         name: formData.name.trim(),
-        email: formData.email.trim() || user?.email || "customer@example.com",
+        email: formData.email.trim() || currentUser?.email || "customer@example.com",
         phone: formData.phone.trim(),
         address: `${formData.address.trim()}${formData.city ? `, ${formData.city.trim()}` : ""}`,
       },
@@ -106,13 +116,13 @@ function Checkout() {
     };
 
     try {
-      try {
-        await createOrder(newOrder).unwrap();
-      } catch (err) {
-        console.warn("API save notice:", err);
-      }
+      await createOrder(newOrder).unwrap();
 
-      // Save order in localStorage for tracking
+      // Clear coupon from localStorage on successful order
+      localStorage.removeItem("zurix_coupon");
+      setCoupon(null);
+
+      // Save order in localStorage as extra backup for tracking
       try {
         const stored = JSON.parse(localStorage.getItem("zurix_orders") || "[]");
         localStorage.setItem("zurix_orders", JSON.stringify([newOrder, ...stored]));
@@ -120,7 +130,6 @@ function Checkout() {
         console.error(err);
       }
 
-      dispatch(clearCart());
       setCompletedOrder(newOrder);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
@@ -390,7 +399,7 @@ function Checkout() {
                         </div>
                       </div>
                       <span className="font-bold text-neutral-900 shrink-0">
-                        ${((Number(item.price) || 0) * (item.quantity || 1)).toFixed(2)}
+                        ${((Number(item.price) || 0) * (Number(item.quantity) || 1)).toFixed(2)}
                       </span>
                     </div>
                   ))}

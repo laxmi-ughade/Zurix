@@ -4,7 +4,7 @@ export const contactApi = createApi({
   reducerPath: "contactApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/",
+baseUrl: import.meta.env.VITE_API_URL,
   }),
 
   tagTypes: ["Messages"],

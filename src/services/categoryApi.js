@@ -4,7 +4,7 @@ export const categoryApi = createApi({
   reducerPath: "categoryApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/",
+baseUrl: import.meta.env.VITE_API_URL,
   }),
 
   endpoints: (builder) => ({
@@ -38,7 +38,7 @@ export const categoryApi = createApi({
     }),
 
     getTestimonials: builder.query({
-  query: () => "testimonials",
+    query: () => "testimonials",
 }),
 
   }),

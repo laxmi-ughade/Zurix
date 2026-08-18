@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import {
   FiChevronRight,
   FiTrash2,
@@ -15,25 +14,44 @@ import {
   FiCheck,
 } from "react-icons/fi";
 import {
-  selectCartItems,
-  selectCartSubtotal,
-  selectCartCoupon,
-  removeFromCart,
-  updateQuantity,
-  clearCart,
-  applyCoupon,
-  removeCoupon,
-} from "../features/cartSlice";
+  useGetCartQuery,
+  useRemoveFromCartMutation,
+  useUpdateCartQuantityMutation,
+  useClearCartMutation,
+} from "../services/shopApi";
 
 function Cart() {
-  const cartItems = useSelector(selectCartItems);
-  const subtotal = useSelector(selectCartSubtotal);
-  const coupon = useSelector(selectCartCoupon);
-  const dispatch = useDispatch();
+  // RTK Query hooks
+  const { data: cartItems = [], isLoading, isError } = useGetCartQuery();
+  const [removeFromCart] = useRemoveFromCartMutation();
+  const [updateCartQuantity] = useUpdateCartQuantityMutation();
+  const [clearCart] = useClearCartMutation();
+
   const navigate = useNavigate();
 
+  // Coupon state
+  const [coupon, setCoupon] = useState(() => {
+    try {
+      const stored = localStorage.getItem("zurix_coupon");
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
   const [couponInput, setCouponInput] = useState("");
   const [couponError, setCouponError] = useState("");
+
+  // Subtotal calculation from RTK Query cache
+  const subtotal = Array.isArray(cartItems)
+    ? cartItems.reduce(
+        (total, item) => total + (Number(item.price) || 0) * (Number(item.quantity) || 1),
+        0
+      )
+    : 0;
+
+  const totalItemCount = Array.isArray(cartItems)
+    ? cartItems.reduce((total, item) => total + (Number(item.quantity) || 1), 0)
+    : 0;
 
   const FREE_SHIPPING_THRESHOLD = 75;
   const progressToFreeShipping = Math.min(
@@ -56,11 +74,54 @@ function Cart() {
     const code = couponInput.trim().toUpperCase();
     if (!code) return;
 
-    if (code === "WELCOME10" || code === "SAVE20") {
-      dispatch(applyCoupon(code));
+    if (code === "WELCOME10") {
+      const newCoupon = { code: "WELCOME10", discountPercent: 10 };
+      setCoupon(newCoupon);
+      localStorage.setItem("zurix_coupon", JSON.stringify(newCoupon));
+      setCouponInput("");
+    } else if (code === "SAVE20") {
+      const newCoupon = { code: "SAVE20", discountPercent: 20 };
+      setCoupon(newCoupon);
+      localStorage.setItem("zurix_coupon", JSON.stringify(newCoupon));
       setCouponInput("");
     } else {
       setCouponError("Invalid coupon code. Try WELCOME10 or SAVE20.");
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCoupon(null);
+    localStorage.removeItem("zurix_coupon");
+  };
+
+  const handleQuantityChange = async (item, delta) => {
+    const currentQty = Number(item.quantity) || 1;
+    const newQty = currentQty + delta;
+    try {
+      if (newQty <= 0) {
+        await removeFromCart(item.id).unwrap();
+      } else {
+        await updateCartQuantity({ id: item.id, quantity: newQty }).unwrap();
+      }
+    } catch (err) {
+      console.error("Failed to update cart quantity:", err);
+    }
+  };
+
+  const handleRemoveItem = async (id) => {
+    try {
+      await removeFromCart(id).unwrap();
+    } catch (err) {
+      console.error("Failed to remove item from cart:", err);
+    }
+  };
+
+  const handleClearCart = async () => {
+    try {
+      await clearCart().unwrap();
+      handleRemoveCoupon();
+    } catch (err) {
+      console.error("Failed to clear cart:", err);
     }
   };
 
@@ -84,7 +145,7 @@ function Cart() {
                 Shopping Cart
               </h1>
               <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-600">
-                {cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0)} items
+                {totalItemCount} items
               </span>
             </div>
             <p className="mt-2 text-sm text-neutral-500">
@@ -94,7 +155,7 @@ function Cart() {
 
           {cartItems.length > 0 && (
             <button
-              onClick={() => dispatch(clearCart())}
+              onClick={handleClearCart}
               className="flex items-center gap-2 text-xs font-bold text-neutral-500 hover:text-red-600 transition cursor-pointer"
             >
               <FiTrash2 size={14} /> Clear Cart
@@ -103,7 +164,15 @@ function Cart() {
         </div>
 
         {/* CART CONTENT */}
-        {cartItems.length === 0 ? (
+        {isLoading ? (
+          <div className="flex min-h-[420px] items-center justify-center rounded-3xl bg-white p-8 shadow-sm border border-neutral-100">
+            <span className="loading loading-spinner loading-lg text-orange-600"></span>
+          </div>
+        ) : isError ? (
+          <div className="alert alert-error max-w-md mx-auto text-white">
+            Failed to load cart items. Please make sure backend server is running.
+          </div>
+        ) : cartItems.length === 0 ? (
           /* Empty Cart State */
           <div className="flex min-h-[420px] flex-col items-center justify-center rounded-3xl bg-white p-8 text-center shadow-sm border border-neutral-100">
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-orange-50 text-orange-600">
@@ -193,14 +262,7 @@ function Cart() {
                       {/* Stepper */}
                       <div className="flex items-center rounded-xl border border-neutral-200 bg-white p-1">
                         <button
-                          onClick={() =>
-                            dispatch(
-                              updateQuantity({
-                                id: item.id,
-                                quantity: (item.quantity || 1) - 1,
-                              })
-                            )
-                          }
+                          onClick={() => handleQuantityChange(item, -1)}
                           className="flex h-7 w-7 items-center justify-center rounded-lg text-neutral-600 hover:bg-neutral-100 transition cursor-pointer"
                           aria-label="Decrease quantity"
                         >
@@ -212,14 +274,7 @@ function Cart() {
                         </span>
 
                         <button
-                          onClick={() =>
-                            dispatch(
-                              updateQuantity({
-                                id: item.id,
-                                quantity: (item.quantity || 1) + 1,
-                              })
-                            )
-                          }
+                          onClick={() => handleQuantityChange(item, 1)}
                           className="flex h-7 w-7 items-center justify-center rounded-lg text-neutral-600 hover:bg-neutral-100 transition cursor-pointer"
                           aria-label="Increase quantity"
                         >
@@ -230,13 +285,13 @@ function Cart() {
                       {/* Line Subtotal */}
                       <div className="text-right min-w-[70px]">
                         <p className="text-base font-extrabold text-neutral-900">
-                          ${((Number(item.price) || 0) * (item.quantity || 1)).toFixed(2)}
+                          ${((Number(item.price) || 0) * (Number(item.quantity) || 1)).toFixed(2)}
                         </p>
                       </div>
 
                       {/* Delete */}
                       <button
-                        onClick={() => dispatch(removeFromCart(item.id))}
+                        onClick={() => handleRemoveItem(item.id)}
                         className="rounded-lg p-2 text-neutral-400 hover:bg-red-50 hover:text-red-600 transition cursor-pointer"
                         title="Remove from cart"
                       >
@@ -276,7 +331,7 @@ function Cart() {
                       </span>
                     </div>
                     <button
-                      onClick={() => dispatch(removeCoupon())}
+                      onClick={handleRemoveCoupon}
                       className="text-xs font-bold text-red-600 hover:underline cursor-pointer"
                     >
                       Remove

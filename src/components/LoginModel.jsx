@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   FiX,
@@ -19,15 +18,12 @@ import {
   useRegisterMutation,
 } from "../services/authApi";
 
-import { loginUser } from "../features/authSlice";
-
 function LoginModal({ isOpen, onClose }) {
   const [login, { isFetching: isLoggingIn }] = useLazyLoginQuery();
   const [getUsers] = useLazyGetUsersQuery();
   const [getUserByEmail] = useLazyGetUserByEmailQuery();
   const [register, { isLoading: isRegistering }] = useRegisterMutation();
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // LOGIN / REGISTER MODE
@@ -97,8 +93,14 @@ function LoginModal({ isOpen, onClose }) {
     setError("");
   };
 
+  // Save authenticated user & trigger session update
+  const persistSession = (user) => {
+    localStorage.setItem("user", JSON.stringify(user));
+    window.dispatchEvent(new Event("auth-changed"));
+  };
+
   // ================================
-  // LOGIN LOGIC (ROBUST & RESILIENT)
+  // LOGIN LOGIC (PURE RTK QUERY)
   // ================================
   const handleLogin = async () => {
     const cleanEmail = formData.email.trim().toLowerCase();
@@ -112,7 +114,7 @@ function LoginModal({ isOpen, onClose }) {
     try {
       let matchedUser = null;
 
-      // 1. Try lazy query login
+      // 1. Try RTK Query lazy login
       try {
         const queryRes = await login({
           email: cleanEmail,
@@ -128,7 +130,7 @@ function LoginModal({ isOpen, onClose }) {
         console.warn("Direct query failed, checking users list fallback:", err);
       }
 
-      // 2. Resilient fallback: fetch users list and match case-insensitively
+      // 2. Resilient fallback: RTK Query lazy users query
       if (!matchedUser) {
         const allUsersRes = await getUsers().unwrap();
         if (Array.isArray(allUsersRes)) {
@@ -145,8 +147,8 @@ function LoginModal({ isOpen, onClose }) {
         return;
       }
 
-      // Save user to Redux & LocalStorage
-      dispatch(loginUser(matchedUser));
+      // Save user session
+      persistSession(matchedUser);
 
       setSuccessMessage(`Welcome back, ${matchedUser.name || "User"}!`);
 
@@ -161,7 +163,7 @@ function LoginModal({ isOpen, onClose }) {
   };
 
   // ================================
-  // REGISTER LOGIC
+  // REGISTER LOGIC (PURE RTK QUERY)
   // ================================
   const handleRegister = async () => {
     const cleanName = formData.name.trim();
@@ -189,7 +191,7 @@ function LoginModal({ isOpen, onClose }) {
     }
 
     try {
-      // Check if user already exists
+      // Check if user already exists with RTK Query
       let existingUsers = [];
       try {
         existingUsers = await getUserByEmail(cleanEmail).unwrap();
@@ -207,7 +209,7 @@ function LoginModal({ isOpen, onClose }) {
         return;
       }
 
-      // Create new user in db.json
+      // Create new user in db.json using RTK Query mutation
       const newUserPayload = {
         name: cleanName,
         email: cleanEmail,
@@ -220,7 +222,7 @@ function LoginModal({ isOpen, onClose }) {
       const createdUser = await register(newUserPayload).unwrap();
 
       // Log in automatically
-      dispatch(loginUser(createdUser));
+      persistSession(createdUser);
 
       setSuccessMessage(`Account created successfully! Welcome, ${cleanName}.`);
 

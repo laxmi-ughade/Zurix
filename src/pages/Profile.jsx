@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   FiUser,
@@ -14,18 +13,20 @@ import {
   FiHeart,
   FiGift,
 } from "react-icons/fi";
-import {
-  selectUser,
-  selectIsAuthenticated,
-  updateProfile,
-  logoutUser,
-} from "../features/authSlice";
+import { useUpdateUserMutation } from "../services/authApi";
 
 function Profile() {
-  const user = useSelector(selectUser);
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [updateUser, { isLoading: isSaving }] = useUpdateUserMutation();
+
+  // Read user from localStorage (set by LoginModel on login/register)
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("zurix_user") || "null");
+    } catch {
+      return null;
+    }
+  });
 
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
@@ -36,9 +37,9 @@ function Profile() {
   });
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!user) {
       navigate("/");
-    } else if (user) {
+    } else {
       setFormData({
         name: user.name || "",
         email: user.email || "",
@@ -46,37 +47,41 @@ function Profile() {
         address: user.address || "",
       });
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [user, navigate]);
 
-  if (!isAuthenticated || !user) {
-    return null;
-  }
+  if (!user) return null;
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(updateProfile(formData));
-    setEditMode(false);
+    try {
+      const updated = await updateUser({ id: user.id, ...formData }).unwrap();
+      // Keep localStorage in sync
+      const newUser = { ...user, ...updated };
+      localStorage.setItem("zurix_user", JSON.stringify(newUser));
+      setUser(newUser);
+      setEditMode(false);
+    } catch (err) {
+      console.error("Failed to update profile:", err);
+    }
   };
 
   const handleLogout = () => {
-    dispatch(logoutUser());
+    localStorage.removeItem("zurix_user");
     navigate("/");
+    // Reload to ensure all RTK Query caches clear
+    window.location.href = "/";
   };
 
-  // Get first letter of user name for avatar
   const avatarLetter = user.name ? user.name.charAt(0).toUpperCase() : "U";
 
   return (
     <div className="min-h-screen bg-slate-50 pt-24 md:pt-32 pb-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        
+
         {/* Profile Card Header */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-neutral-900 via-neutral-800 to-orange-950 p-6 md:p-10 text-white shadow-xl">
           <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-orange-600/10 blur-3xl"></div>
@@ -96,9 +101,7 @@ function Profile() {
               <h1 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
                 {user.name}
               </h1>
-              <p className="mt-1 text-sm text-neutral-300">
-                {user.email}
-              </p>
+              <p className="mt-1 text-sm text-neutral-300">{user.email}</p>
 
               {/* Quick Info Grid */}
               <div className="mt-6 flex flex-wrap justify-center gap-4 text-xs font-medium text-neutral-300 md:justify-start">
@@ -143,12 +146,10 @@ function Profile() {
 
         {/* Content Section */}
         <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
-          
+
           {/* Details Form Card */}
           <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-100 lg:col-span-2">
-            <h2 className="text-xl font-bold text-neutral-900">
-              Account Details
-            </h2>
+            <h2 className="text-xl font-bold text-neutral-900">Account Details</h2>
             <p className="mt-1 text-sm text-neutral-500">
               Manage your personal information and contact details.
             </p>
@@ -252,9 +253,10 @@ function Profile() {
                 <div className="flex justify-end">
                   <button
                     type="submit"
-                    className="flex items-center gap-2 rounded-full bg-orange-650 px-6 py-3 text-sm font-semibold text-white transition hover:bg-orange-700 shadow-md hover:shadow-orange-200"
+                    disabled={isSaving}
+                    className="flex items-center gap-2 rounded-full bg-orange-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-orange-700 shadow-md hover:shadow-orange-200 disabled:opacity-60"
                   >
-                    <FiSave /> Save Changes
+                    <FiSave /> {isSaving ? "Saving..." : "Save Changes"}
                   </button>
                 </div>
               )}
@@ -264,21 +266,15 @@ function Profile() {
           {/* Quick Stats sidebar */}
           <div className="space-y-6 lg:col-span-1">
             <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-100">
-              <h3 className="text-lg font-bold text-neutral-900">
-                Offers & Rewards
-              </h3>
+              <h3 className="text-lg font-bold text-neutral-900">Offers & Rewards</h3>
               <div className="mt-4 rounded-2xl bg-orange-50/50 p-4 border border-orange-100">
-                <p className="text-sm font-bold text-orange-950">
-                  Welcome Reward!
-                </p>
+                <p className="text-sm font-bold text-orange-950">Welcome Reward!</p>
                 <p className="mt-1 text-xs text-neutral-600">
                   Use coupon code <span className="font-semibold text-orange-600">WELCOME10</span> to get 10% off on your next purchase.
                 </p>
               </div>
               <div className="mt-4 rounded-2xl bg-indigo-50/50 p-4 border border-indigo-100">
-                <p className="text-sm font-bold text-indigo-950">
-                  Free Shipping
-                </p>
+                <p className="text-sm font-bold text-indigo-950">Free Shipping</p>
                 <p className="mt-1 text-xs text-neutral-600">
                   Free standard shipping applies to all orders over $75.
                 </p>
@@ -286,9 +282,7 @@ function Profile() {
             </div>
 
             <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-100">
-              <h3 className="text-lg font-bold text-neutral-900">
-                Need Help?
-              </h3>
+              <h3 className="text-lg font-bold text-neutral-900">Need Help?</h3>
               <p className="mt-2 text-xs leading-relaxed text-neutral-500">
                 Have questions about your order, tracking, or refunds? Our support team is here 24/7.
               </p>
@@ -300,7 +294,7 @@ function Profile() {
               </button>
             </div>
           </div>
-          
+
         </div>
       </div>
     </div>

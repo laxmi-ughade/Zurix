@@ -1,41 +1,60 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FaHeart, FaRegHeart, FaRegEye, FaCheck } from "react-icons/fa";
 import { useGetProductsQuery } from "../../services/categoryApi";
-import { toggleWishlist, selectWishlistItems } from "../../features/wishlistSlice";
-import { addToCart } from "../../features/cartSlice";
+import {
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
+  useAddToCartMutation,
+} from "../../services/shopApi";
 
 function TrendingProducts() {
   const [activeTab, setActiveTab] = useState("best-sellers");
   const [addedId, setAddedId] = useState(null);
 
-  const dispatch = useDispatch();
-  const wishlistItems = useSelector(selectWishlistItems);
-
+  // RTK Query hooks
   const {
     data: products = [],
     isLoading,
     isError,
   } = useGetProductsQuery(activeTab);
 
+  const { data: wishlistItems = [] } = useGetWishlistQuery();
+  const [addToWishlist] = useAddToWishlistMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
+  const [addToCart] = useAddToCartMutation();
+
   // Show only 8 products
   const displayedProducts = products.slice(0, 8);
 
-  const handleAddToCart = (product, e) => {
+  const handleAddToCart = async (product, e) => {
     e?.stopPropagation();
-    dispatch(addToCart(product));
-    setAddedId(product.id);
-    setTimeout(() => setAddedId(null), 1500);
+    try {
+      await addToCart(product).unwrap();
+      setAddedId(product.id);
+      setTimeout(() => setAddedId(null), 1500);
+    } catch (err) {
+      console.error("Failed to add to cart:", err);
+    }
   };
 
-  const handleToggleWishlist = (product, e) => {
+  const handleToggleWishlist = async (product, e) => {
     e?.stopPropagation();
-    dispatch(toggleWishlist(product));
+    const existing = wishlistItems.find((item) => String(item.id) === String(product.id));
+    try {
+      if (existing) {
+        await removeFromWishlist(existing.id).unwrap();
+      } else {
+        await addToWishlist(product).unwrap();
+      }
+    } catch (err) {
+      console.error("Failed to toggle wishlist:", err);
+    }
   };
 
   const isWishlisted = (productId) =>
-    wishlistItems.some((item) => item.id === productId);
+    wishlistItems.some((item) => String(item.id) === String(productId));
 
   return (
     <section className="bg-white px-4 py-12 md:px-10 lg:px-16 md:py-20">

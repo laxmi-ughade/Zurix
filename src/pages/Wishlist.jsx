@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import {
   FiChevronRight,
   FiTrash2,
@@ -10,29 +9,56 @@ import {
   FiCheck,
 } from "react-icons/fi";
 import {
-  selectWishlistItems,
-  removeFromWishlist,
-  clearWishlist,
-} from "../features/wishlistSlice";
-import { addToCart } from "../features/cartSlice";
+  useGetWishlistQuery,
+  useRemoveFromWishlistMutation,
+  useClearWishlistMutation,
+  useAddToCartMutation,
+} from "../services/shopApi";
 
 function Wishlist() {
-  const wishlistItems = useSelector(selectWishlistItems);
-  const dispatch = useDispatch();
-  const [addedItemIds, setAddedItemIds] = React.useState({});
+  const { data: wishlistItems = [], isLoading, isError } = useGetWishlistQuery();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
+  const [clearWishlist] = useClearWishlistMutation();
+  const [addToCart] = useAddToCartMutation();
 
-  const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
-    setAddedItemIds((prev) => ({ ...prev, [product.id]: true }));
-    setTimeout(() => {
-      setAddedItemIds((prev) => ({ ...prev, [product.id]: false }));
-    }, 1500);
+  const [addedItemIds, setAddedItemIds] = useState({});
+
+  const handleAddToCart = async (product) => {
+    try {
+      await addToCart(product).unwrap();
+      setAddedItemIds((prev) => ({ ...prev, [product.id]: true }));
+      setTimeout(() => {
+        setAddedItemIds((prev) => ({ ...prev, [product.id]: false }));
+      }, 1500);
+    } catch (err) {
+      console.error("Add to cart error:", err);
+    }
   };
 
-  const handleAddAllToCart = () => {
-    wishlistItems.forEach((item) => {
-      dispatch(addToCart(item));
-    });
+  const handleAddAllToCart = async () => {
+    try {
+      await Promise.all(
+        wishlistItems.map((item) => addToCart(item).unwrap())
+      );
+    } catch (err) {
+      console.error("Add all to cart error:", err);
+    }
+  };
+
+  const handleRemoveItem = async (id) => {
+    try {
+      await removeFromWishlist(id).unwrap();
+    } catch (err) {
+      console.error("Remove from wishlist error:", err);
+    }
+  };
+
+  const handleClearWishlist = async () => {
+    try {
+      await clearWishlist().unwrap();
+    } catch (err) {
+      console.error("Clear wishlist error:", err);
+    }
   };
 
   return (
@@ -75,7 +101,7 @@ function Wishlist() {
               </button>
 
               <button
-                onClick={() => dispatch(clearWishlist())}
+                onClick={handleClearWishlist}
                 className="flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-4 py-2.5 text-xs sm:text-sm font-bold text-neutral-700 hover:border-red-300 hover:bg-red-50 hover:text-red-600 transition cursor-pointer"
               >
                 <FiTrash2 size={15} />
@@ -86,7 +112,15 @@ function Wishlist() {
         </div>
 
         {/* CONTENT */}
-        {wishlistItems.length === 0 ? (
+        {isLoading ? (
+          <div className="flex min-h-[420px] items-center justify-center rounded-3xl bg-white p-8 shadow-sm border border-neutral-100">
+            <span className="loading loading-spinner loading-lg text-orange-600"></span>
+          </div>
+        ) : isError ? (
+          <div className="alert alert-error max-w-md mx-auto text-white">
+            Failed to load wishlist items. Please ensure backend server is running.
+          </div>
+        ) : wishlistItems.length === 0 ? (
           /* Empty Wishlist State */
           <div className="flex min-h-[420px] flex-col items-center justify-center rounded-3xl bg-white p-8 text-center shadow-sm border border-neutral-100">
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-orange-50 text-orange-500">
@@ -136,7 +170,7 @@ function Wishlist() {
 
                     {/* Delete button */}
                     <button
-                      onClick={() => dispatch(removeFromWishlist(product.id))}
+                      onClick={() => handleRemoveItem(product.id)}
                       className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-neutral-700 shadow-md backdrop-blur-sm transition hover:bg-red-600 hover:text-white cursor-pointer"
                       title="Remove from wishlist"
                     >

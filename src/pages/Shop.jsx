@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useParams, useNavigate, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import {
   FiChevronDown,
   FiChevronUp,
@@ -15,12 +14,19 @@ import {
   useGetAllProductsQuery,
   useGetCategoriesQuery,
 } from "../services/categoryApi";
-import { toggleWishlist, selectWishlistItems } from "../features/wishlistSlice";
-import { addToCart } from "../features/cartSlice";
+import {
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
+  useAddToCartMutation,
+} from "../services/shopApi";
 
 function Shop() {
-  const dispatch = useDispatch();
-  const wishlistItems = useSelector(selectWishlistItems);
+  const { data: wishlistItems = [] } = useGetWishlistQuery();
+  const [addToWishlist] = useAddToWishlistMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
+  const [addToCart] = useAddToCartMutation();
+
   const [addedProductId, setAddedProductId] = useState(null);
 
   const { gender: pathGender, category: pathCategory } = useParams();
@@ -149,6 +155,34 @@ function Shop() {
       updateFilter(item.key, "");
     }
   };
+
+  const handleAddToCart = async (product, e) => {
+    e?.stopPropagation();
+    try {
+      await addToCart(product).unwrap();
+      setAddedProductId(product.id);
+      setTimeout(() => setAddedProductId(null), 1500);
+    } catch (err) {
+      console.error("Add to cart failed:", err);
+    }
+  };
+
+  const handleToggleWishlist = async (product, e) => {
+    e?.stopPropagation();
+    const existing = wishlistItems.find((item) => String(item.id) === String(product.id));
+    try {
+      if (existing) {
+        await removeFromWishlist(existing.id).unwrap();
+      } else {
+        await addToWishlist(product).unwrap();
+      }
+    } catch (err) {
+      console.error("Toggle wishlist failed:", err);
+    }
+  };
+
+  const isWishlisted = (productId) =>
+    wishlistItems.some((item) => String(item.id) === String(productId));
 
   return (
     <div className="min-h-screen bg-[#fafafa] pt-20 pb-16 mt-20">
@@ -560,18 +594,15 @@ function Shop() {
                       <div className="absolute right-3 top-3 flex flex-col gap-2 opacity-0 transition duration-300 group-hover:opacity-100">
                         <button
                           type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            dispatch(toggleWishlist(product));
-                          }}
+                          onClick={(e) => handleToggleWishlist(product, e)}
                           className={`flex h-9 w-9 items-center justify-center rounded-full border shadow transition cursor-pointer ${
-                            wishlistItems.some((item) => item.id === product.id)
+                            isWishlisted(product.id)
                               ? "border-red-200 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white"
                               : "border-gray-100 bg-white text-black hover:bg-black hover:text-white"
                           }`}
                           title="Wishlist"
                         >
-                          {wishlistItems.some((item) => item.id === product.id) ? (
+                          {isWishlisted(product.id) ? (
                             <FaHeart size={14} className="text-red-500" />
                           ) : (
                             <FaRegHeart size={14} />
@@ -583,12 +614,7 @@ function Shop() {
                       {cols !== 1 && (
                         <button
                           type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            dispatch(addToCart(product));
-                            setAddedProductId(product.id);
-                            setTimeout(() => setAddedProductId(null), 1500);
-                          }}
+                          onClick={(e) => handleAddToCart(product, e)}
                           className={`absolute bottom-3 left-3 right-3 h-11 rounded-xl text-xs font-bold uppercase tracking-wider transition duration-300 shadow-lg cursor-pointer flex items-center justify-center gap-1.5 ${
                             addedProductId === product.id
                               ? "bg-green-600 text-white opacity-100"
@@ -651,11 +677,7 @@ function Shop() {
                         {cols === 1 && (
                           <button
                             type="button"
-                            onClick={() => {
-                              dispatch(addToCart(product));
-                              setAddedProductId(product.id);
-                              setTimeout(() => setAddedProductId(null), 1500);
-                            }}
+                            onClick={(e) => handleAddToCart(product, e)}
                             className={`btn btn-sm rounded-xl font-bold uppercase text-[11px] py-1.5 px-4 shadow cursor-pointer ${
                               addedProductId === product.id
                                 ? "bg-green-600 text-white"

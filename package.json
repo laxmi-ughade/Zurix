@@ -6,8 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "server": "json-server --watch db.json --port 5000",
-     "start": "json-server --host 0.0.0.0 --port $PORT https://zurix-1.onrender.com",
     "lint": "eslint .",
     "preview": "vite preview"
   },

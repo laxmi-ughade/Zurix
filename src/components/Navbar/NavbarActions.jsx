@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import {
   FiUser,
   FiSearch,
@@ -12,25 +11,53 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 
-import {
-  selectUser,
-  selectIsAuthenticated,
-  logoutUser,
-} from "../../features/authSlice";
-import { selectCartCount } from "../../features/cartSlice";
-import { selectWishlistCount } from "../../features/wishlistSlice";
+import { useGetCartQuery, useGetWishlistQuery } from "../../services/shopApi";
 
 function NavbarActions({ scrolled, onLogin, onSearch }) {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const user = useSelector(selectUser);
-  const cartCount = useSelector(selectCartCount);
-  const wishlistCount = useSelector(selectWishlistCount);
-
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // RTK Query for Cart & Wishlist live data
+  const { data: cartItems = [] } = useGetCartQuery();
+  const { data: wishlistItems = [] } = useGetWishlistQuery();
+
+  // Calculate live badge counts directly from RTK Query cache
+  const cartCount = Array.isArray(cartItems)
+    ? cartItems.reduce((total, item) => total + (Number(item.quantity) || 1), 0)
+    : 0;
+  const wishlistCount = Array.isArray(wishlistItems) ? wishlistItems.length : 0;
+
+  // Active user session state
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem("user");
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const isAuthenticated = Boolean(currentUser);
+
+  // Sync auth state changes across windows/tabs/actions
+  useEffect(() => {
+    const handleAuthChange = () => {
+      try {
+        const stored = localStorage.getItem("user");
+        setCurrentUser(stored ? JSON.parse(stored) : null);
+      } catch {
+        setCurrentUser(null);
+      }
+    };
+
+    window.addEventListener("storage", handleAuthChange);
+    window.addEventListener("auth-changed", handleAuthChange);
+    return () => {
+      window.removeEventListener("storage", handleAuthChange);
+      window.removeEventListener("auth-changed", handleAuthChange);
+    };
+  }, []);
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -51,12 +78,14 @@ function NavbarActions({ scrolled, onLogin, onSearch }) {
 
   const handleLogout = () => {
     setProfileDropdownOpen(false);
-    dispatch(logoutUser());
+    localStorage.removeItem("user");
+    window.dispatchEvent(new Event("auth-changed"));
+    setCurrentUser(null);
     navigate("/");
   };
 
   const iconColorClass = scrolled ? "text-neutral-900" : "text-white";
-  const avatarLetter = user?.name ? user.name.charAt(0).toUpperCase() : "U";
+  const avatarLetter = currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : "U";
 
   return (
     <div className="flex items-center gap-2 sm:gap-4 md:gap-5 px-1 sm:px-3">
@@ -134,12 +163,12 @@ function NavbarActions({ scrolled, onLogin, onSearch }) {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
                         <p className="truncate text-sm font-bold text-white">
-                          {user?.name || "User"}
+                          {currentUser?.name || "User"}
                         </p>
                         <FiCheckCircle className="shrink-0 text-orange-400" size={13} />
                       </div>
                       <p className="truncate text-xs text-neutral-300">
-                        {user?.email || "user@zurix.com"}
+                        {currentUser?.email || "user@zurix.com"}
                       </p>
                       <span className="mt-1 inline-block rounded-full bg-orange-600/30 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-orange-300 border border-orange-500/30">
                         Verified Member

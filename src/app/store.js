@@ -1,20 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { categoryApi } from "../services/categoryApi";
 import { contactApi } from "../services/contactApi";
 import { authApi } from "../services/authApi";
-import authReducer from "../features/authSlice";
-import cartReducer from "../features/cartSlice";
-import wishlistReducer from "../features/wishlistSlice";
 import { styleGuideApi } from "../services/styleGuideApi";
 import { shopApi } from "../services/shopApi";
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
-    cart: cartReducer,
-    wishlist: wishlistReducer,
-
     [categoryApi.reducerPath]: categoryApi.reducer,
     [contactApi.reducerPath]: contactApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
@@ -30,3 +24,7 @@ export const store = configureStore({
       .concat(styleGuideApi.middleware)
       .concat(shopApi.middleware),
 });
+
+setupListeners(store.dispatch);
+
+export default store;
