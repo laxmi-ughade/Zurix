@@ -734,7 +734,44 @@
     }
   ],
   "wishlist": [],
-  "cart": [],
+  "cart": [
+    {
+      "id": "9Cemd_sXlXc",
+      "name": "Olive Green Tank Top",
+      "price": 39.99,
+      "oldPrice": 49.99,
+      "image": "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": false,
+      "gender": "women",
+      "category": "Blouses",
+      "color": "green",
+      "size": "S",
+      "tags": [
+        "product",
+        "home_1"
+      ],
+      "quantity": 1
+    },
+    {
+      "id": "wLPVTgFGycw",
+      "name": "Olive Green Tank Top",
+      "price": 39.99,
+      "oldPrice": 49.99,
+      "image": "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?q=80&w=800&auto=format&fit=crop",
+      "type": "best-sellers",
+      "sale": false,
+      "gender": "women",
+      "category": "Blouses",
+      "color": "green",
+      "size": "S",
+      "tags": [
+        "product",
+        "home_1"
+      ],
+      "quantity": 1
+    }
+  ],
   "orders": [
     {
       "id": "R2npvUOpENM",
